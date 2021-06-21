@@ -1,0 +1,137 @@
+{% extends 'navbar.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title_block %}
+    Home
+{% endblock title_block %}
+
+{% block body_block %}
+    <div class="row mb-5">
+            <div class="col-12 mx-auto text-center">
+                {% if user.user_profile.profile_pic %}
+                    <img src="/media/{{ user.user_profile.profile_pic }}" class="img-fluid mx-auto rounded-circle mr-2" alt="Profile picture" style="height: 50px; width: 50px;">
+                {% else %}
+                <img src="/media/profile_pics/default_profile.jpg" class=" img-fluid mx-auto rounded-circle" alt="Profile picture" style="max-height: 50px; max-width: 50px;">
+                {% endif %}
+                 &nbsp;&nbsp;<a href="{% url 'app_user_activity:post' %}" style="text-decoration: none;" class="btn btn-outline-secondary rounded">What's on your mind? Post it!!</a>
+            </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+
+        </div>
+        <div class="col-md-7 mx-auto">
+                {% for post in posts %}
+                        <div class="row">
+                            <div class="col-1 mx-auto">
+                                {% if post.author.user_profile.profile_pic %}
+                                    <img src="/media/{{ post.author.user_profile.profile_pic }}" class="img-fluid mx-auto rounded-circle mr-2" alt="Profile picture" style="height: 50px; width: 60px;">
+                                {% else %}
+                                    <img src="/media/profile_pics/default_profile.jpg" class=" img-fluid mx-auto rounded-circle" alt="Profile picture" style="height: 50px; width: 60px;">
+                                {% endif %}
+                            </div>
+                            <div class="col-11 pt-0" style="padding-left: 5px;padding-bottom: 0px; margin: 0px;;">
+                                <h5><a href="{% url 'app_user_activity:profile_visit' username=post.author.username %}" style="text-decoration:none;color:black;">{{ post.author.first_name }} {{ post.author.last_name }}</a></h5>
+                                <small class="text-muted" style="padding-top: 0px; margin:0px;">{{ post.upload_date }}</small>
+                            </div>
+                        </div>
+                        <hr style="height:0px; padding: 0px; margin-bottom: 5px;">
+                        <div class="row mx-auto" style="padding:0px; margin-left: 15px;">
+                            {{ post.post_description }}
+                            <div class="tz-gallery">
+                                <a class="lightbox" href="/media/{{ post.post_image }}">
+                                    <img src="/media/{{ post.post_image }}" class="img-fluid mx-auto" alt="Profile picture" style="height: 270px; width: 350px;">
+                                </a>
+                            </div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <ul class="list-group">
+                                        <li class="list-group-item border-0"><a href="" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="text-decoration: none;" class="text-muted">{{ post.liked_post.count }} Likes</a></li>
+                                    </ul>
+                                
+                        
+                                    <!-- <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                          <div class="modal-content">
+                                            <div class="modal-header">
+                                              <h5 class="modal-title" id="staticBackdropLabel">Likes</h5>
+                                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                              {% for like_user in post.liked_post.all %}
+                                                <p>{{ like_user }}</p>
+                                                <p><a href="{% url 'app_user_activity:profile_visit' username=like_user.user_liked.username %}" style="text-decoration:none;">{{ like_user.first_name }} {{ like_user.last_name }}</a></p>
+                                              {% endfor %}
+                                            </div>
+                                            
+                                          </div>
+                                        </div>
+                                      </div> -->
+                                </div>
+
+                                <div class="col-8 text-center">
+                                    
+                                    <div id="" style="text-decoration: none;cursor: pointer;" class="list-group-item text-muted border-0 comment_show">{{ post.blog_comments.count }} Comments
+                                        <div class="comment_view" style="display:none; overflow-y: scroll;max-height:50px;">
+                                            {% for comment in post.blog_comments.all %}
+                                                <p><a href="{% url 'app_user_activity:profile_visit' username=comment.user_comment.username %}" style="text-decoration: none;">{{ comment.user_comment.first_name }} {{ comment.user_comment.last_name }}</a> {{ comment.comment_content }}</p>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <!-- <div class="modal fade" id="mymodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mymodalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                          <div class="modal-content">
+                                            <div class="modal-header">
+                                              <h5 class="modal-title" id="staticBackdropLabel">Commnet</h5>
+                                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                              {% for comment in post.blog_comments.all %}
+                                                <p><a href="">{{ comment.user_comment }}</a> {{ comment.comment_content }}</p>
+                                              {% endfor %}
+                                            </div>
+                                            
+                                          </div>
+                                        </div>
+                                    </div> -->
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="row m-0 p-0">
+                            <div class="col-6">
+                                {% if post.pk in liked_post_list %}
+                                      <ul class="list-group">
+                                        <li class="list-group-item border-0"><a href="{% url 'app_user_activity:unlike' pk=post.pk %}" style="text-decoration: none;"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Unlike </a></li>
+                                    </ul>
+                                {% else %}
+                                    <ul class="list-group">
+                                        <li class="list-group-item border-0"><a href="{% url 'app_user_activity:like' pk=post.pk %}" style="text-decoration: none; color: black;"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Like </a></li>
+                                    </ul>
+                                {% endif %}
+                                
+                              
+                            </div>
+                            <div class="col-6">
+                                <ul class="list-group">
+                                    <li class="list-group-item border-0"><a href="{% url 'app_user_activity:comment' pk=post.pk %}" style="text-decoration: none; color: black; padding-left: 35px;"><i class="fa fa-comment-o"></i> Comment</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- dummy ################## -->
+                       
+                        <hr style="height:0.5px; margin-top: 5px;margin-bottom: 25px; padding-top: 0px;" class="col-9 text-center">
+                {% endfor %}
+        </div>
+        <div class="col-md-2">
+
+        </div>
+    </div>
+<!-- this is for dummy -->
+<div class="row">
+
+</div>
+{% endblock body_block %}

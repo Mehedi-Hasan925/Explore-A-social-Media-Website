@@ -1,0 +1,16 @@
+{% extends 'navbar.html' %}
+{% load crispy_forms_tags %}
+
+{% block title_block %}
+    Set Profile Information
+{% endblock title_block %}
+
+{% block body_block %}
+    <div class="col-sm-8 mx-auto">
+        <form method="POST" enctype="multipart/form-data">
+            {{ form|crispy }}
+            {% csrf_token %}
+            <input type="submit" name="submit" value="Add to Profile" class="form-control btn btn-info mt-4">
+        </form>
+    </div>
+{% endblock body_block %}

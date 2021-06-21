@@ -1,0 +1,42 @@
+{% extends 'navbar.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title_block %}
+    Following list
+{% endblock title_block %}
+
+
+{% block body_block %}
+
+    {% for users in following_objects %}
+            <div class="card mb-3 ml-5" style="max-width: 540px;">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        {% if users.user_profile.profile_pic %}
+                            <img src="/media/{{ users.user_profile.profile_pic }}" alt="{{ users.username }}" class="img-fluid" style="max-height:100px;">
+                        {% else %}
+                        <img src="/media/profile_pics/default_profile.jpg" alt="{{ users.username }}" class="img-fluid" style="max-height:100px;"> 
+                        {% endif %}
+                    
+                    </div>
+                    <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title"><a href="{% url 'app_user_activity:profile_visit' username=users.username %}" style="text-decoration: none;">{{ users.first_name }} {{ users.last_name }}</a></h5>
+                                {% if users.user_profile.other_institution %}
+                                    <p class="card-text">Studied at <b>{{ users.user_profile.other_institution}} </b></p>
+                                {% elif users.user_profile.school %}
+                                    <p class="card-text">Studied at <b>{{ usersusers.user_profile.College}} </b></p>
+                                {% elif users.user_profile.school %}
+                                    <p class="card-text">Studied at <b>{{ users.user_profile.school}} </b></p>
+                                {% elif users.user_profile.training %}
+                                    <p class="card-text">Trained at <b>{{ users.user_profile.training}} </b></p>
+                                {% endif %}
+                            </div>
+                    </div>
+                </div>
+            </div>
+    {% endfor %}
+
+{% endblock body_block %}
+

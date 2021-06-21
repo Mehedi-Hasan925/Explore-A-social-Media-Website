@@ -1,0 +1,129 @@
+{% extends 'navbar.html' %}
+{% load static %}
+
+{% block title_block %}
+    Profile
+{% endblock title_block %}
+
+{% block body_block %}
+    
+    <div class="row">
+        {% if user.user_profile.profile_pic %}
+                <div class="col-sm-4 mx-auto text-center pt-4 mt-4">
+                        <div class="tz-gallery">
+                            <a class="lightbox" href="/media/{{ user.user_profile.profile_pic }}">
+                                <img src="/media/{{ user.user_profile.profile_pic }}" class="img-fluid mx-auto rounded-circle" alt="Profile picture" style="height: 270px; width: 270px;">
+                            </a>
+                        </div>
+                    <li class="" style="list-style: none;"><a href="{% url 'app_login:change_profile_photo' %}" class="btn btn-info"> Change Profile Photo</a></li>
+                </div>
+            
+        {% else %}
+            <div class="col-sm-4 mx-auto text-center pt-4 mt-4">
+                <div class="tz-gallery">
+                    <a class="lightbox" href="/media/profile_pics/default_profile.jpg">
+                        <img src="/media/profile_pics/default_profile.jpg" class="img-fluid mx-auto rounded-circle" alt="Profile picture" style="max-height: 200px; max-width: 200px;">
+                    </a>
+                </div>
+                <li class="" style="list-style: none;"><a href="{% url 'app_login:change_profile_photo' %}" class="btn btn-info"> Change Profile Photo</a></li>
+            </div>
+        {% endif %}
+
+            <div class="col-sm-8 pt-4 m-auto">
+                <div class="card-body">
+                    <h3 class="card-title text-center">{{ user.first_name }} {{ user.last_name }}</h3>
+                    <div class="row">
+                        <h5 class="col-4 pr-4"> {{ user.user_post.count }} Posts</h5><h5 class="col-4 pl-4 pr-4"><a href="{% url 'app_user_activity:follower_list' username=user.username %}" style="text-decoration: none;">{{ user.following_user.count }} Followers</a></h5><h5 class="col-4 text-sm-right pl-4"><a href="{% url 'app_user_activity:following_list' username=user.username %}" style="text-decoration: none;">{{ user.follower_user.count }} Following</a></h5>
+                    </div>
+                    <br>
+                {% if user.user_profile.school or user.user_profile.College or user.user_profile.other_institution or user.user_profile.training or user.user_profile.facebook_id or user.user_profile.dob %}
+                    <ul class="list-group col-sm-10">
+                        {% if user.user_profile.school %}
+                            <li class="list-group-item border-bottom-0"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Studied at <b>{{ user.user_profile.school }}</b></li>
+                        {% endif %}
+                        {% if user.user_profile.College %}
+                            <li class="list-group-item border-bottom-0"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Studied at <b>{{ user.user_profile.College }}</b></li>
+                        {% endif %}
+                        {% if user.user_profile.other_institution %}
+                            <li class="list-group-item border-bottom-0"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Graduated From <b>{{ user.user_profile.other_institution }}</b></li>
+                        {% endif %}
+                        {% if user.user_profile.training %}
+                            <li class="list-group-item border-bottom-0"><i class="fa fa-graduation-cap" aria-hidden="true"></i> Trained at <b>{{ user.user_profile.training }}</b></li>
+                        {% endif %}
+                        {% if user.user_profile.facebook_id %}
+                            <li class="list-group-item border-bottom-0"><i class="fa fa-facebook-square" aria-hidden="true"></i>&nbsp; Facebook: <b>{{ user.user_profile.facebook_id }}</b></li>
+                        {% endif %}
+                        {% if user.user_profile.dob %}
+                            <li class="list-group-item "> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Born on: <b>{{ user.user_profile.dob }}</b></li>
+                        {% endif %}
+                      </ul>
+                {% endif %}
+                <li class="list-group-item text-center col-sm-10"><a href="{% url 'app_login:add_profile_info' %}" class="btn btn-primary card-link"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit/Add information</a></li>
+                <hr>
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item border-0">Email: {{ user.email }}</li>
+                        <li class="list-group-item border-0">Username: {{ user.username }}</li>
+                        <li class="list-group-item"><a href="{% url 'app_login:login_info_update' %}" class="btn btn-primary card-link"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit information</a></li>
+                    </ul>
+                </div>
+            </div>
+    </div>
+    <hr>
+    <h2 class="text-center">Photos</h2>
+
+    <div class="container gallery-container">
+        
+        <div class="tz-gallery">
+    
+            <div class="row">
+                {% for photos in user.user_post.all %}
+                <div class="col-sm-12 col-md-3">
+                    <a class="lightbox" href="/media/{{ photos.post_image }}">
+                        <img src="/media/{{ photos.post_image }}" alt="" style="height:200px;">
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+    
+        </div>
+    </div>
+    
+    <!-- START OF POSTS -->
+    <div class="row mt-5">
+        <div class="col-md-2">
+
+        </div>
+        <div class="col-md-6">
+                {% for post in user.user_post.all %}
+                        <div class="row">
+                            <div class="col-1">
+                                {% if post.author.user_profile.profile_pic %}
+                                    <img src="/media/{{ post.author.user_profile.profile_pic }}" class="img-fluid mx-auto rounded-circle mr-2" alt="Profile picture" style="height: 50px; width: 50px;">
+                                {% else %}
+                                    <img src="/media/profile_pics/default_profile.jpg" class=" img-fluid mx-auto rounded-circle" alt="Profile picture" style="height: 50px; width: 50px;">
+                                {% endif %}
+                            </div>
+                            <div class="col-11 pt-0" style="padding-left: 5px;padding-bottom: 0px; margin: 0px;;">
+                                <h5><a href="{% url 'app_user_activity:profile_visit' username=post.author.username %}" style="text-decoration:none;color:black;">{{ post.author.first_name }} {{ post.author.last_name }}</a></h5>
+                                <small class="text-muted" style="padding-top: 0px; margin:0px;">{{ post.upload_date }}</small>
+                            </div>
+                        </div>
+                        <hr style="height:0px; padding: 0px; margin-bottom: 5px;">
+                        <div class="row" style="padding:0px; margin-left: 15px;">
+                            {{ post.post_description }}
+                            <div class="tz-gallery">
+                                <a class="lightbox" href="/media/{{ post.post_image }}">
+                                    <img src="/media/{{ post.post_image }}" class="img-fluid mx-auto" alt="Profile picture" style="height: 270px; width: 350px;">
+                                </a>
+                            </div>
+                        </div>
+                        <hr style="height:0.5px; margin-top: 0px;margin-bottom: 25px; padding-top: 0px;">
+                {% endfor %}
+        </div>
+        <div class="col-md-4">
+
+        </div>
+    </div>
+{% endblock body_block %}
+

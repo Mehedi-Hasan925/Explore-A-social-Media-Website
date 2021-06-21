@@ -1,0 +1,17 @@
+{% extends 'navbar.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block title_block %}
+    Login info Update
+{% endblock title_block %}
+
+{% block body_block %}
+   
+      <form method="POST">
+          {{ form|crispy }}
+          {% csrf_token %}
+          <input type="submit" name="submit" value="Update" class="btn btn-info mt-2">
+      </form>
+{% endblock body_block %}
+

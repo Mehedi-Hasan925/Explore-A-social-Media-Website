@@ -1,0 +1,62 @@
+{% extends 'navbar.html' %}
+{% load crispy_forms_tags %}
+
+{% block title_block %}
+    Home
+{% endblock title_block %}
+
+{% block body_block %}
+  
+    <div class="row mt-4">
+        {% if pattern %}
+                <div class="card mb-3" style="max-width: 540px;">
+                    {% for data in result %}
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            {% if data.user_profile.profile_pic %}
+                                <img src="/media/{{ data.user_profile.profile_pic }}" alt="{{ data.username }}" class="img-fluid" style="max-height:100px;">
+                            {% else %}
+                               <img src="/media/profile_pics/default_profile.jpg" alt="{{ data.username }}" class="img-fluid" style="max-height:100px;"> 
+                            {% endif %}
+                        
+                        </div>
+                        {% if user.pk is not data.pk %}
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title"><a href="{% url 'app_user_activity:profile_visit' username=data.username %}" style="text-decoration: none;">{{ data.first_name }} {{ data.last_name }}</a></h5>
+                                    {% if data.user_profile.other_institution %}
+                                        <p class="card-text">Studied at <b>{{ data.user_profile.other_institution}} </b></p>
+                                    {% elif data.user_profile.school %}
+                                        <p class="card-text">Studied at <b>{{ data.user_profile.College}} </b></p>
+                                    {% elif data.user_profile.school %}
+                                        <p class="card-text">Studied at <b>{{ data.user_profile.school}} </b></p>
+                                    {% elif data.user_profile.training %}
+                                        <p class="card-text">Trained at <b>{{ data.user_profile.training}} </b></p>
+                                    {% endif %}
+                                    
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title"><a href="{% url 'app_login:profile' %}" style="text-decoration: none;">{{ data.first_name }} {{ data.last_name }}</a></h5>
+                                    {% if data.user_profile.other_institution %}
+                                        <p class="card-text">Studied at <b>{{ data.user_profile.other_institution}} </b></p>
+                                    {% elif data.user_profile.school %}
+                                        <p class="card-text">Studied at <b>{{ data.user_profile.College}} </b></p>
+                                    {% elif data.user_profile.school %}
+                                        <p class="card-text">Studied at <b>{{ data.user_profile.school}} </b></p>
+                                    {% elif data.user_profile.training %}
+                                        <p class="card-text">Trained at <b>{{ data.user_profile.training}} </b></p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <hr>
+                    {% endfor %}
+                </div>
+            
+        {% endif %}
+    </div>
+{% endblock body_block %}

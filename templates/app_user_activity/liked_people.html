@@ -1,0 +1,15 @@
+{% extends 'navbar.html' %}
+
+{% block title_block %}
+    Liked
+{% endblock title_block %}
+
+
+{% block body_block %}
+    {% for users in liked_user %}
+    <p>{{ users.first_name }} {{ users.last_name }}</p>
+    
+    {% endfor %}
+
+{% endblock body_block %}
+
